@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: your-registry/mysql:latest
+        image: fir3eye/mysql:latest
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
