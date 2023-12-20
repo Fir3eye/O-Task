@@ -4,3 +4,52 @@ AMI:- ami-05fb0b8c1424f266b
 vpc:- vpc-0622a6794aedc97e9
 key:- eks-key
 subnet  	subnet-021e7bf178dab0a39
+
+
+
+Bothe master and node 	# using 'sudo su' is not a good practice.
+	sudo apt update
+	sudo apt-get install -y apt-transport-https ca-certificates curl
+	sudo apt install docker.io -y
+	
+	sudo systemctl enable --now docker # enable and start in single command.
+	
+	# Adding GPG keys.
+	curl -fsSL "https://packages.cloud.google.com/apt/doc/apt-key.gpg" | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg
+	
+	# Add the repository to the sourcelist.
+	echo 'deb https://packages.cloud.google.com/apt kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+	
+	sudo apt update 
+	sudo apt install kubeadm=1.20.0-00 kubectl=1.20.0-00 kubelet=1.20.0-00 -y
+MASTER	Sudo kubeadm init 
+	
+	Below show in your terminal  paste in master 
+	 mkdir -p $HOME/.kube
+	  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+	  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+	 
+	
+	kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+	
+	Cni create karega ---> jisse service ek dusre se baat kar skti hain 
+
+
+Worker
+
+sudo kubeadm reset pre-flight checks
+
+Master
+
+Create token in master node 
+sudo kubeadm token create --print-join-command
+
+Show this --> kubeadm join 172.31.19.70:6443 --token ukfm2g.kd4z6h063atxmmu3     --discovery-token-ca-cert-hash sha256:8671d7807d3cf0eb46e1dc310e3e52316252a75eca14b57a639388f95bb7fb55 --v=5
+Node -: connect to worker with the help of this token  
+
+Specify port --> 6443
+
+Kubectl get nodes
+
+
+done
