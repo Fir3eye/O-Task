@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: wordpress
-        image: your-registry/wordpress:latest
+        image: fir3eye/wordpress:latest
         env:
         - name: WORDPRESS_DB_HOST
           value: mysql-service
