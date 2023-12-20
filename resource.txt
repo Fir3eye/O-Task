@@ -1,0 +1,6 @@
+provider:- aws 
+regtion:- us-east-2
+AMI:- ami-05fb0b8c1424f266b
+vpc:- vpc-0622a6794aedc97e9
+key:- eks-key
+subnet  	subnet-021e7bf178dab0a39
