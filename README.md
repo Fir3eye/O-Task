@@ -183,3 +183,66 @@ kubectl scale deployment mysql --replicas=<desired-replicas>
 
 ```
 All Task are available with full explanation 
+
+
+
+## Working Noge-agent Pipeline 
+
+```
+pipeline {
+    agent {
+        label 'testapp'
+    }
+
+    environment {
+        APP_NAME = "myapp"
+        DOCKER_USER = "dockt35t"
+        DOCKER_PASS = 'dockerhub'
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
+        IMAGE_TAG = "latest"
+        REMOTE_SERVER = 'ubuntu@35.154.149.28'
+        REMOTE_PATH = '/home/ubuntu/app'
+        SSH_CREDENTIALS = '35.154.149.28'
+        LOCAL_PATH = '/var/lib/jenkins/workspace/testapp'
+    }
+
+    stages {
+        stage("Checkout SCM") {
+            steps {
+                git branch: 'develop', credentialsId: 'github', url: 'https://github.com/test-202/app.git'
+            }
+        }
+        stage("Build Docker Image") {
+            steps {
+                script {
+                    docker.withRegistry('', DOCKER_PASS) {
+                        def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                        customImage.push()
+                    }
+                }
+            }
+        }
+
+        // stage("Deploy to Node") {
+        //     steps {
+        //         script {
+        //             // Copy files to the remote node using SSH
+        //             sshagent(credentials: ['35.154.149.28']) {
+        //                 sh "scp -r ${LOCAL_PATH} ${REMOTE_SERVER}:${REMOTE_PATH}"
+        //             }
+        //         }
+        //     }
+        // }
+        stage('Deploy to Node') {
+            steps {
+                script {
+                    // Copy files to the remote node using SSH
+                    sshagent(credentials: [SSH_CREDENTIALS]) {
+                    sh "ssh ${REMOTE_SERVER} ' docker run -d --name myapp-container -p 8090:8000 ${IMAGE_NAME}:${IMAGE_TAG}'"
+                    }
+                }
+            }
+        }
+    }
+}
+```
