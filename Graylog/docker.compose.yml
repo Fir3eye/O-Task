@@ -1,17 +1,13 @@
-version: '2'
+version: '3'
 services:
-  # MongoDB: https://hub.docker.com/_/mongo/
   mongodb:
     image: mongo:4.2
     networks:
       - graylog
-  #DB in share for persistence
     volumes:
       - /mongo_data:/data/db
-   # Elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docker.html
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
-    #data folder in share for persistence
     volumes:
       - /es_data:/usr/share/elasticsearch/data
     environment:
@@ -26,20 +22,15 @@ services:
     mem_limit: 1g
     networks:
       - graylog
-  # Graylog: https://hub.docker.com/r/graylog/graylog/
   graylog:
     image: graylog/graylog:4.2
-    #journal and config directories in local NFS share for persistence
     volumes:
       - /graylog_journal:/usr/share/graylog/data/journal
     environment:
-      # CHANGE ME (must be at least 16 characters)!
-      - GRAYLOG_PASSWORD_SECRET=password@1234567890
-      # Password: admin
-      # Use this command for create SHA2 pass ---> echo -n "Enter Password: " && head -1 </dev/stdin | tr -d '\n' | sha256sum | cut -d" " -f1
-      - GRAYLOG_ROOT_PASSWORD_SHA2=e1b24204830484d635d744e849441b793a6f7e1032ea1eef40747d95d30da592
-      - GRAYLOG_HTTP_EXTERNAL_URI=http://<server_IP>:9000/
-    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
+      - GRAYLOG_PASSWORD_SECRET=RSm5ItGoJUXaGvbeKD54AMGKL8K6ucnHuhWCeczMomnakxWCqTUFsapGWpE0o20n
+      - GRAYLOG_ROOT_PASSWORD_SHA2=a649eb00ca02f0782ea836b1bd87afbe88dfaa444ffa76af97cdbc0fb4909956
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://65.2.187.42:9000/
+    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 -- /docker-entrypoint.sh
     networks:
       - graylog
     links:
@@ -50,17 +41,13 @@ services:
       - mongodb
       - elasticsearch
     ports:
-      # Graylog web interface and REST API
       - 9000:9000
-      # Syslog TCP
       - 1514:1514
-      # Syslog UDP
       - 1514:1514/udp
-      # GELF TCP
       - 12201:12201
-      # GELF UDP
       - 12201:12201/udp
-# Volumes for persisting data, see https://docs.docker.com/engine/admin/volumes/volumes/
+      - 8787:8787
+      - 8787:8787/udp
 volumes:
   mongo_data:
     driver: local
@@ -71,5 +58,3 @@ volumes:
 networks:
     graylog:
       driver: bridge
-
-
