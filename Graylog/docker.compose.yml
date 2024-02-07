@@ -29,7 +29,7 @@ services:
     environment:
       - GRAYLOG_PASSWORD_SECRET=RSm5ItGoJUXaGvbeKD54AMGKL8K6ucnHuhWCeczMomnakxWCqTUFsapGWpE0o20n
       - GRAYLOG_ROOT_PASSWORD_SHA2=a649eb00ca02f0782ea836b1bd87afbe88dfaa444ffa76af97cdbc0fb4909956
-      - GRAYLOG_HTTP_EXTERNAL_URI=http://65.2.187.42:9000/
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://server_ip:9000/
     entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 -- /docker-entrypoint.sh
     networks:
       - graylog
