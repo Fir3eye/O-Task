@@ -46,8 +46,6 @@ services:
       - 1514:1514/udp
       - 12201:12201
       - 12201:12201/udp
-      - 8787:8787
-      - 8787:8787/udp
 volumes:
   mongo_data:
     driver: local
