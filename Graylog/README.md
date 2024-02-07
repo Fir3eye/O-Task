@@ -1,48 +1,52 @@
-## Install Docker and Docker-compose
-```
-apt install docker.io
-apt install docker-compose
-sudo usermod -aG docker $USER
-newgrp docker
+# Docker and Logging Environment Setup Script
 
-docker version
-docker-compose version
+This bash script automates the setup process for a Docker environment on a Linux machine. It installs Docker, adds the current user to the Docker group, installs essential utilities (`curl` and `wget`), sets up Docker Compose, and prepares the system for logging by creating specific directories with appropriate permissions. It also configures the Uncomplicated Firewall (UFW) to allow traffic on port 9000, commonly used by web applications.
 
-```
-## Provision to Graylog Container
-```
+## Prerequisites
 
-```
-## Create Persistent Volume 
-```
-sudo mkdir /mongo_data
-sudo mkdir /es_data
-sudo mkdir /graylog_journal
+- A Linux distribution that supports `apt` package management (such as Ubuntu or Debian).
+- User with sudo privileges.
 
-```
-## Set the write permission 
-```
-sudo chmod 777 -R /mongo_data
-sudo chmod 777 -R /es_data
-sudo chmod 777 -R /graylog_journal
+## Features
 
+- **Docker Installation**: Installs `docker.io` package.
+- **User Group Configuration**: Adds the current user to the `docker` group to allow running Docker commands without `sudo`.
+- **Docker Version Check**: Displays the installed Docker version.
+- **Utility Tools Installation**: Installs `curl` and `wget` utilities.
+- **Docker Compose Setup**: Installs `docker-compose`.
+- **Directory Creation**: Creates `/mongo_data`, `/es_data`, and `/graylog_journal` for data storage.
+- **Permissions Setting**: Sets full read/write/execute permissions on the created directories.
+- **Firewall Configuration**: Allows traffic on port 9000/tcp.
 
-```
-## Run 
-```
-docker-compose up -d
+## How to Use
 
-```
-## Check the container Status
-```
-docker ps
-```
-## If you have a firewall enabled, allow the Graylog service port through it.
-```
-sudo ufw allow 9000/tcp
-```
+1. **Download the Script**: Download the `setup_docker_and_logs.sh` script to your local machine.
 
-## Access the Graylog Web UI
-```
-Your_server_IP:9000
-```
+2. **Make the Script Executable**:
+    ```bash
+    chmod +x setup_docker_and_logs.sh
+    ```
+
+3. **Run the Script**:
+    - Execute the script using `sudo` to ensure it has the necessary permissions:
+    ```bash
+    sudo ./setup_docker_and_logs.sh
+    ```
+
+4. **Post-Execution Steps**:
+    - You may need to log out and log back in or reboot your system to apply the user group changes effectively.
+
+## Security Considerations
+
+- The script sets the permissions of `/mongo_data`, `/es_data`, and `/graylog_journal` directories to `777` (read, write, execute for all users). Review and adjust these permissions as necessary to comply with your security policies.
+- Ensure that allowing traffic on port 9000/tcp is compatible with your network security policies.
+
+## Troubleshooting
+
+- **Docker Commands Require `sudo`**: If Docker commands still require `sudo` after script execution, ensure you've logged out and back in to refresh your user group memberships.
+- **Firewall Issues**: If applications can't connect on port 9000, ensure UFW is correctly configured and the service/application is configured to listen on this port.
+
+## License
+
+This script is provided "as is", without warranty of any kind, express or implied. Use at your own risk.
+
