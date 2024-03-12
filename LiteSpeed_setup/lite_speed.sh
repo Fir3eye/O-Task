@@ -24,9 +24,12 @@ sudo /usr/local/lsws/bin/lswsctrl start
 echo "Setting OpenLiteSpeed admin password..."
 sudo /usr/local/lsws/admin/misc/admpass.sh
 
+# Start OpenLiteSpeed and Access the WebAdmin Console
+sudo /usr/local/lsws/bin/lswsctrl start
+
+# Firewall Configuration
 sudo ufw allow 8088
 sudo ufw allow 7080
 
-sudo /usr/local/lsws/bin/lswsctrl start
 
 echo "OpenLiteSpeed installation and basic configuration completed."
