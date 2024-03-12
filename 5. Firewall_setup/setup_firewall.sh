@@ -31,3 +31,9 @@ echo "Enabling UFW (Uncomplicated Firewall)..."
 echo "y" | sudo ufw enable
 
 echo "Firewall setup completed."
+
+
+
+
+
+
